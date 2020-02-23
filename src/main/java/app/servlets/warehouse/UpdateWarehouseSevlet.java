@@ -4,6 +4,7 @@ import app.entities.Warehouse;
 import app.service.FactoryDao;
 import app.util.ValidateUtil;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +16,8 @@ import java.io.IOException;
 public class UpdateWarehouseSevlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/update.jsp");
+        requestDispatcher.forward(req, resp);
     }
 
     @Override

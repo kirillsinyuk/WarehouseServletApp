@@ -1,14 +1,17 @@
 package app.entities;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
-@Data
+@EqualsAndHashCode(of = "id")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +20,12 @@ public class Warehouse {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "warehouse")
-    private List<Product> product;
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "warehouse"
+    )
+    private transient List<Product> product;
 
 }

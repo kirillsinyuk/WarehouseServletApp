@@ -51,7 +51,7 @@ public class WarehouseDAOImpl implements WarehouseDAO {
         Warehouse warehouse = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            warehouse = (Warehouse) session.load(Warehouse.class, warehouse_id);
+            warehouse = session.load(Warehouse.class, warehouse_id);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -68,7 +68,7 @@ public class WarehouseDAOImpl implements WarehouseDAO {
         List<Warehouse> warehouses = new ArrayList();
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            warehouses = session.createCriteria(Product.class).list();
+            warehouses = session.createQuery("from Warehouse").list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

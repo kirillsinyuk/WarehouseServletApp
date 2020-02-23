@@ -39,7 +39,7 @@ public class JsonConverter {
 
         JsonArray jarray = gson.toJsonTree(warehouses).getAsJsonArray();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("products", jarray);
+        jsonObject.add("warehouses", jarray);
 
         return jsonObject.toString();
     }
@@ -48,7 +48,7 @@ public class JsonConverter {
 
         JsonArray jarray = gson.toJsonTree(warehouse).getAsJsonArray();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("product", jarray);
+        jsonObject.add("warehouse", jarray);
 
         return jsonObject.toString();
     }

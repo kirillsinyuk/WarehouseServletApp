@@ -69,7 +69,7 @@ public class ProductDAOImpl implements ProductDAO {
         List<Product> products = new ArrayList();
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            products = session.createQuery("from product").list();
+            products = session.createQuery("from Product").list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -107,7 +107,7 @@ public class ProductDAOImpl implements ProductDAO {
             Long warehouseId = warehouse.getId();
             Query query = session.createQuery(
                     " select p "
-                            + " from product p INNER JOIN p.warehouse_id wh"
+                            + " from Product p INNER JOIN p.warehouse_id wh"
                             + " where wh.id = :warehouseId"
             )
                     .setLong("warehouseId", warehouseId);

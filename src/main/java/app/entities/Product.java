@@ -1,14 +1,17 @@
 package app.entities;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 @Entity
-@Data
+@EqualsAndHashCode(of = "id")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     @Id
@@ -28,6 +31,6 @@ public class Product {
     private BigDecimal sellingPrice;
 
     @ManyToOne
-    @JoinColumn(name="warehouse_id", nullable=false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
 }

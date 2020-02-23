@@ -51,8 +51,17 @@
                         <label>Name:
                             <input type="text" name="name" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br />
                         </label>
-                        <label>Password:
-                            <input type="password" name="pass" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br />
+                        <label>Vendor code:
+                            <input type="text" name="vendorCode" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br />
+                        </label>
+                        <label>Purchase price:
+                            <input type="number" name="purchasePrice" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br />
+                        </label>
+                        <label>Selling price:
+                            <input type="number" name="sellingPrice" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br />
+                        </label>
+                        <label>Warehouse id:
+                            <input type="number" name="warehouse" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br />
                         </label>
                         <button type="submit" class="w3-btn w3-green w3-hover-light-blue w3-round-large w3-margin-bottom">Submit</button>
                     </form>
