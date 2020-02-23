@@ -49,7 +49,7 @@ public class ValidateUtil {
             BigDecimal purchasePrice = ValidateUtil.getBigDecimalParam(req, "purchasePrice", false);
             BigDecimal sellingPrice = ValidateUtil.getBigDecimalParam(req, "sellingPrice", false);
             Long warehouse_id = ValidateUtil.getLongParam(req, "warehouse", true);
-            Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehousetById(warehouse_id);
+            Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(warehouse_id);
             if (warehouse == null){
                 throw  new ValidatorException("Warehouse not found.");
             }

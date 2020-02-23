@@ -1,4 +1,3 @@
-<%@ page import="app.entities.FailCause" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: root
@@ -23,7 +22,7 @@
 <div>
     <div class="w3-container w3-padding">
         <%
-            if (request.getAttribute("cause") != null) {
+            if (response.getStatus() == 200) {
                 List<FailCause> causes= (List<FailCause>)request.getAttribute("cause");
                 out.println("<div class=\"w3-panel w3-red w3-display-container w3-card-4 w3-round\">\n" +
                         "   <span onclick=\"this.parentElement.style.display='none'\"\n" +

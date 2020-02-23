@@ -2,123 +2,77 @@ package app.dao.impl;
 
 import app.dao.interfaces.ProductDAO;
 import app.entities.Product;
-import app.entities.Warehouse;
 import app.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public void addProduct(Product product) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            session.save(product);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+        Session session= HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(product);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
     public void updateProduct(Product product) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            session.merge(product);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.merge(product);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
     public Product getProductById(Long product_id) {
-        Session session = null;
-        Product product = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            product = (Product) session.load(Product.class, product_id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query query= session.createQuery("from Product where id=:id");
+        query.setParameter("id", product_id);
+        Product product = (Product) query.uniqueResult();
+        session.getTransaction().commit();
+        session.close();
         return product;
     }
 
     @Override
     public List<Product> getAllProducts() {
-        Session session = null;
-        List<Product> products = new ArrayList();
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            products = session.createQuery("from Product").list();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-        return products;
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        List<Product> list = session.createQuery("from Product").list();
+        session.getTransaction().commit();
+        session.close();
+        return list;
     }
 
     @Override
-    public void deleteProduct(Product product) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            session.delete(product);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+    public void deleteProduct(Long product_id) {
+        Product product = getProductById(product_id);
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.delete(product);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
-    public List<Product> getProductsByWarehouse(Warehouse warehouse) {
-        Session session = null;
-        List<Product> products = new ArrayList<>();
-        try {
-            session = HibernateUtil.getSessionFactory().getCurrentSession();
-            session.beginTransaction();
-            Long warehouseId = warehouse.getId();
-            Query query = session.createQuery(
-                    " select p "
-                            + " from Product p INNER JOIN p.warehouse_id wh"
-                            + " where wh.id = :warehouseId"
-            )
-                    .setLong("warehouseId", warehouseId);
-            products = (List<Product>) query.list();
-            session.getTransaction().commit();
-
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+    public List<Product> getProductsByWarehouse(Long warehouse_id) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query query = session.createQuery(
+                " select p "
+                        + " from Product p INNER JOIN p.warehouse_id wh"
+                        + " where wh.id = :warehouseId"
+        );
+        query.setParameter("warehouseId", warehouse_id);
+        List<Product> products = query.list();
+        session.getTransaction().commit();
+        session.close();
         return products;
     }
 }

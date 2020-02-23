@@ -2,7 +2,7 @@ package app.servlets.warehouse;
 
 import app.entities.Warehouse;
 import app.service.FactoryDao;
-import app.servlets.converter.JsonConverter;
+import app.service.converter.*;
 import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
@@ -24,7 +24,7 @@ public class GetWarehouseServlet extends HttpServlet {
                 resp.setContentType("application/json;charset=UTF-8");
                 ServletOutputStream out = resp.getOutputStream();
 
-                Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehousetById(id);
+                Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(id);
                 JsonConverter converter = new JsonConverter();
                 String output = converter.convertWarehouseToJson(warehouse);
 

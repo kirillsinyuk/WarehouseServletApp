@@ -1,4 +1,4 @@
-package app.servlets.converter;
+package app.service.converter;
 
 import app.entities.Product;
 import app.entities.Warehouse;
@@ -27,11 +27,7 @@ public class JsonConverter {
     }
 
     public String convertProductToJson(Product product) {
-
-        JsonArray jarray = gson.toJsonTree(product).getAsJsonArray();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("product", jarray);
-
+        JsonObject jsonObject = gson.toJsonTree(product).getAsJsonObject();
         return jsonObject.toString();
     }
 
@@ -45,11 +41,7 @@ public class JsonConverter {
     }
 
     public String convertWarehouseToJson(Warehouse warehouse) {
-
-        JsonArray jarray = gson.toJsonTree(warehouse).getAsJsonArray();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("warehouse", jarray);
-
+        JsonObject jsonObject = gson.toJsonTree(warehouse).getAsJsonObject();
         return jsonObject.toString();
     }
 }

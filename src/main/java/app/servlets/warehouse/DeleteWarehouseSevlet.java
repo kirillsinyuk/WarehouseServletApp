@@ -25,13 +25,7 @@ public class DeleteWarehouseSevlet extends HttpServlet {
         if (req.getParameterMap().containsKey("id")) {
             Long id = ValidateUtil.getIdFromReq(req);
             if (id != null) {
-                Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehousetById(id);
-                if (warehouse != null) {
-                    FactoryDao.getInstance().getWarehouseDAO().deleteWarehouse(warehouse);
-                } else {
-                    resp.sendError(400, "No entity to delete");
-                    return;
-                }
+                FactoryDao.getInstance().getWarehouseDAO().deleteWarehouse(id);
             } else {
                 resp.sendError(400, "Bad id");
                 return;

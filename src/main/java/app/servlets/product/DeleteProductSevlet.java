@@ -25,13 +25,7 @@ public class DeleteProductSevlet extends HttpServlet {
         if (req.getParameterMap().containsKey("id")) {
             Long id = ValidateUtil.getIdFromReq(req);
             if (id != null) {
-                Product product = FactoryDao.getInstance().getProductDAO().getProductById(id);
-                if (product != null) {
-                    FactoryDao.getInstance().getProductDAO().deleteProduct(product);
-                } else {
-                    resp.sendError(400, "No entity to delete");
-                    return;
-                }
+                    FactoryDao.getInstance().getProductDAO().deleteProduct(id);
             } else {
                 resp.sendError(400, "Bad id");
                 return;

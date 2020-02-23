@@ -2,7 +2,7 @@ package app.servlets.product;
 
 import app.entities.Product;
 import app.service.FactoryDao;
-import app.servlets.converter.JsonConverter;
+import app.service.converter.*;
 import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
