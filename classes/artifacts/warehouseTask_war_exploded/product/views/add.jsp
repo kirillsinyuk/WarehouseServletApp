@@ -1,10 +1,3 @@
-<%@ page import="java.util.List" %><%--
-  Created by IntelliJ IDEA.
-  User: root
-  Date: 8/6/19
-  Time: 11:29 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
@@ -22,21 +15,17 @@
         <div>
             <div class="w3-container w3-padding">
                 <%
-                    if (request.getAttribute("cause") != null) {
-//                        List<FailCause> causes= (List<FailCause>)request.getAttribute("cause");
-//                        out.println("<div class=\"w3-panel w3-red w3-display-container w3-card-4 w3-round\">\n" +
-//                                "   <span onclick=\"this.parentElement.style.display='none'\"\n" +
-//                                "   class=\"w3-button w3-margin-right w3-display-right w3-round-large w3-hover-grey w3-border w3-border-grey w3-hover-border-grey\">×</span>\n" +
-//                                "   <h5>Невозможно создать пользователя с именем \"" + request.getAttribute("userName") + "\". Causes:");
-//                        for (FailCause f: causes) {
-//                            out.println("<p>" + f);
-//                        }
-//                        out.print("</h5>\n</div>");
-                    } else if (request.getAttribute("userName") != null){
+                    if (response.getStatus() == 200) {
                         out.println("<div class=\"w3-panel w3-green w3-display-container w3-card-4 w3-round\">\n" +
                                 "   <span onclick=\"this.parentElement.style.display='none'\"\n" +
+                                "   class=\"w3-button w3-margin-right w3-display-right w3-round-large w3-hover-grey w3-border w3-border-grey w3-hover-border-grey\">×</span>\n" +
+                                "   <h5>Товар \"" + request.getAttribute("name") + "\" успешно добавлен.");
+                        out.print("</h5>\n</div>");
+                    } else {
+                        out.println("<div class=\"w3-panel w3-red w3-display-container w3-card-4 w3-round\">\n" +
+                                "   <span onclick=\"this.parentElement.style.display='none'\"\n" +
                                 "   class=\"w3-button w3-margin-right w3-display-right w3-round-large w3-hover-gray w3-border w3-border-gray w3-hover-border-grey\">×</span>\n" +
-                                "   <h5>User '" + request.getAttribute("userName") + "' added!</h5>\n" +
+                                "   <h5>Не удалось добавить товар '" + request.getAttribute("name") + "' Ошибка: " + response.getStatus() + "</h5>\n" +
                                 "</div>");
                     }
                 %>

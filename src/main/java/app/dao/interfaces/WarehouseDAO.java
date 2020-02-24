@@ -1,6 +1,6 @@
 package app.dao.interfaces;
 
-import app.entities.Warehouse;
+import app.model.entities.Warehouse;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-<%@ page import="app.entities.FailCause" %>
+<%@ page import="app.model.entities.FailCause" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: root

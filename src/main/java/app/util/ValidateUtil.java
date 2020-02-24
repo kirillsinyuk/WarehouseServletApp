@@ -1,93 +1,60 @@
 package app.util;
 
-import app.entities.Product;
-import app.entities.Warehouse;
+import app.model.entities.Product;
+import app.model.entities.Warehouse;
 import app.service.FactoryDao;
-import sun.security.validator.ValidatorException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class ValidateUtil {
 
     private ValidateUtil(){}
 
-    private static String getStringParam(HttpServletRequest request, String fieldName, boolean required) throws ValidatorException {
-        String fieldValue = request.getParameter(fieldName);
-        if ((fieldValue == null || fieldValue.trim().isEmpty()) && required) {
-            throw new ValidatorException("Field is required");
+    private static boolean priceIsValid(BigDecimal price, boolean required) {
+        if (required) {
+            return Objects.nonNull(price) && price.compareTo(BigDecimal.ZERO) != -1;
+        } else if (Objects.nonNull(price)) {
+            return price.compareTo(BigDecimal.ZERO) != -1;
         }
-
-        return fieldValue;
+        return true;
     }
 
-    private static BigDecimal getBigDecimalParam(HttpServletRequest request, String fieldName, boolean required) throws ValidatorException, NumberFormatException {
-        BigDecimal fieldValue;
-            if (required && !request.getParameterMap().containsKey(fieldName)) {
-                throw new ValidatorException("Field is required");
-            } else {
-                fieldValue = new BigDecimal(request.getParameter(fieldName));
-            }
-        return fieldValue;
-    }
-
-    private static Long getLongParam(HttpServletRequest request, String fieldName, boolean required) throws ValidatorException, NumberFormatException {
-        Long fieldValue;
-        if (required && !request.getParameterMap().containsKey(fieldName)) {
-            throw new ValidatorException("Field is required");
-        } else {
-            fieldValue = Long.parseLong(request.getParameter(fieldName));
+    private static boolean stringValid (String strParam, boolean required) {
+        if (required) {
+            return Objects.nonNull(strParam) && !strParam.trim().isEmpty();
+        } else if (Objects.nonNull(strParam)) {
+            return !strParam.trim().isEmpty();
         }
-        return fieldValue;
+        return true;
     }
 
-    public static Product validateAndCreateProduct(HttpServletRequest req){
-        Product product = null;
+    public static boolean isWarehiuseIdValid (Long id) {
+        return Objects.nonNull(id) && FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(id) != null;
+    }
+
+    public static boolean isProductIdValid (Long id) {
+        return Objects.nonNull(id) && FactoryDao.getInstance().getProductDAO().getProductById(id) != null;
+    }
+
+    public static boolean isProductValid(Product product, boolean required){
+        return stringValid(product.getName(), required)
+                && stringValid(product.getVendorCode(), required)
+                && priceIsValid(product.getPurchasePrice(), required)
+                && priceIsValid(product.getSellingPrice(), required)
+                && isWarehouseValid(product.getWarehouse(), required);
+    }
+
+    public static boolean isWarehouseValid(Warehouse warehouse, boolean required){
+        return stringValid(warehouse.getName(), required);
+    }
+
+    public static Long getLongParam(String param) {
         try {
-            String name = ValidateUtil.getStringParam(req, "name", false);
-            String vendorCode = ValidateUtil.getStringParam(req, "vendorCode", false);
-            BigDecimal purchasePrice = ValidateUtil.getBigDecimalParam(req, "purchasePrice", false);
-            BigDecimal sellingPrice = ValidateUtil.getBigDecimalParam(req, "sellingPrice", false);
-            Long warehouse_id = ValidateUtil.getLongParam(req, "warehouse", true);
-            Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(warehouse_id);
-            if (warehouse == null){
-                throw  new ValidatorException("Warehouse not found.");
-            }
-            product = Product.builder()
-                    .name(name)
-                    .vendorCode(vendorCode)
-                    .purchasePrice(purchasePrice)
-                    .sellingPrice(sellingPrice)
-                    .warehouse(warehouse)
-                    .build();
-        } catch (ValidatorException | NumberFormatException e){
-            e.printStackTrace();
-
-
+            return Long.parseLong(param);
+        } catch (NumberFormatException e) {
+            return null;
         }
-        return product;
     }
 
-    public static Warehouse validateAndCreateWarehouse(HttpServletRequest req) {
-        Warehouse warehouse = null;
-        try {
-            String name = ValidateUtil.getStringParam(req, "name", true);
-            warehouse = Warehouse.builder()
-                    .name(name)
-                    .build();
-        } catch (ValidatorException e){
-            e.printStackTrace();
-        }
-        return warehouse;
-    }
-
-    public static Long getIdFromReq(HttpServletRequest req){
-        Long id = null;
-        try {
-            id = ValidateUtil.getLongParam(req, "id", true);
-        } catch (ValidatorException e){
-            e.printStackTrace();
-        }
-        return id;
-    }
 }

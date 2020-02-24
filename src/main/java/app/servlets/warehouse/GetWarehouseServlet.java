@@ -1,47 +1,34 @@
 package app.servlets.warehouse;
 
-import app.entities.Warehouse;
+import app.model.entities.Warehouse;
 import app.service.FactoryDao;
 import app.service.converter.*;
 import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "GetWarehouseServlet", urlPatterns = "/warehouse/get")
 public class GetWarehouseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getParameterMap().containsKey("id")) {
-            Long id = ValidateUtil.getIdFromReq(req);
-            if(id != null) {
-                resp.setContentType("application/json;charset=UTF-8");
-                ServletOutputStream out = resp.getOutputStream();
+        JsonConverter converter = new JsonConverter();
 
-                Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(id);
-                JsonConverter converter = new JsonConverter();
-                String output = converter.convertWarehouseToJson(warehouse);
-
-                out.print(output);
-            } else {
-                resp.sendError(400);
-            }
-        } else {
-            resp.setContentType("application/json;charset=UTF-8");
-            ServletOutputStream out = resp.getOutputStream();
-
-            List<Warehouse> warehouses = FactoryDao.getInstance().getWarehouseDAO().getAllWarehouses();
-
-            JsonConverter converter = new JsonConverter();
-            String output = converter.convertWarehouseCollectionToJson(warehouses);
-
-            out.print(output);
+        String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        Long id = converter.parseId(json);
+        if (ValidateUtil.isProductIdValid(id)) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
         }
+        Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(id);
+        resp.setContentType("application/json;charset=UTF-8");
+        String output = converter.convertWarehouseToJson(warehouse);
+
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(output);
     }
 }

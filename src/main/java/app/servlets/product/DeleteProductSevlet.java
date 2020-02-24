@@ -1,38 +1,28 @@
 package app.servlets.product;
 
-import app.entities.Product;
 import app.service.FactoryDao;
-import app.util.ValidateUtil;
+import app.service.converter.JsonConverter;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "DeleteProductSevlet", urlPatterns = "/product/delete")
 public class DeleteProductSevlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/delete.jsp");
-        requestDispatcher.forward(req, resp);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getParameterMap().containsKey("id")) {
-            Long id = ValidateUtil.getIdFromReq(req);
-            if (id != null) {
-                    FactoryDao.getInstance().getProductDAO().deleteProduct(id);
-            } else {
-                resp.sendError(400, "Bad id");
-                return;
-            }
-            doGet(req, resp);
-        }  else {
-            resp.sendError(400, "No id");
+        String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        JsonConverter converter = new JsonConverter();
+        Long id = converter.parseId(json);
+        if (id == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
         }
+        FactoryDao.getInstance().getProductDAO().deleteProduct(id);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

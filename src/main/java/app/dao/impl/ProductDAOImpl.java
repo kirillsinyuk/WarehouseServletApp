@@ -1,7 +1,7 @@
 package app.dao.impl;
 
 import app.dao.interfaces.ProductDAO;
-import app.entities.Product;
+import app.model.entities.Product;
 import app.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -51,6 +51,11 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public List<Product> getAllProductsCount() {
+        return null;
+    }
+
+    @Override
     public void deleteProduct(Long product_id) {
         Product product = getProductById(product_id);
         Session session=HibernateUtil.getSessionFactory().openSession();
@@ -70,6 +75,23 @@ public class ProductDAOImpl implements ProductDAO {
                         + " where wh.id = :warehouseId"
         );
         query.setParameter("warehouseId", warehouse_id);
+        List<Product> products = query.list();
+        session.getTransaction().commit();
+        session.close();
+        return products;
+    }
+
+    @Override
+    public List<Product> getProductsByParam(String param, String value) {
+        Session session=HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        StringBuilder strQuery = new StringBuilder()
+                .append("from Product")
+                .append("where ")
+                .append(param).append("=:")
+                .append(param);
+        Query query= session.createQuery(strQuery.toString());
+        query.setParameter(param, value);
         List<Product> products = query.list();
         session.getTransaction().commit();
         session.close();

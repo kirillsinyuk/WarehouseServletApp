@@ -1,7 +1,7 @@
 package app.dao.impl;
 
 import app.dao.interfaces.WarehouseDAO;
-import app.entities.Warehouse;
+import app.model.entities.Warehouse;
 import app.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;

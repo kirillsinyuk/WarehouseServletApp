@@ -1,8 +1,8 @@
 package app.servlets.warehouse;
 
-import app.entities.Warehouse;
+import app.model.entities.Warehouse;
 import app.service.FactoryDao;
-import app.util.ValidateUtil;
+import app.service.converter.JsonConverter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "UpdateWarehouseSevlet", urlPatterns = "/warehouse/update")
 public class UpdateWarehouseSevlet extends HttpServlet {
@@ -23,13 +24,15 @@ public class UpdateWarehouseSevlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Warehouse warehouse = ValidateUtil.validateAndCreateWarehouse(req);
+        String strProduct = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        JsonConverter converter = new JsonConverter();
+        Warehouse warehouse = converter.parseWarehouseFromJson(strProduct, false);
+
         if (warehouse == null){
-            resp.sendError(400);
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
         } else {
             FactoryDao.getInstance().getWarehouseDAO().updateWarehouse(warehouse);
-            resp.setStatus(200);
+            resp.setStatus(HttpServletResponse.SC_OK);
         }
-        doGet(req, resp);
     }
 }
