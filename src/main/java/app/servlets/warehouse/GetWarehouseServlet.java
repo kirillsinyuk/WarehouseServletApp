@@ -21,8 +21,9 @@ public class GetWarehouseServlet extends HttpServlet {
 
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         Long id = converter.parseId(json);
-        if (ValidateUtil.isProductIdValid(id)) {
+        if (!ValidateUtil.isWarehiuseIdValid(id)) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            return;
         }
         Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(id);
         resp.setContentType("application/json;charset=UTF-8");

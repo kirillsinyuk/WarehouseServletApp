@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "AddProductServlet", urlPatterns = "/product/list")
+@WebServlet(name = "ListProductServlet", urlPatterns = "/product/list")
 public class ListOfProductServlet extends HttpServlet {
 
     @Override

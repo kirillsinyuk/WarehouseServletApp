@@ -21,8 +21,9 @@ public class GetProductServlet extends HttpServlet {
 
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         Long id = converter.parseId(json);
-        if (ValidateUtil.isProductIdValid(id)) {
+        if (!ValidateUtil.isProductIdValid(id)) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            return;
         }
         Product product = FactoryDao.getInstance().getProductDAO().getProductById(id);
         resp.setContentType("application/json;charset=UTF-8");

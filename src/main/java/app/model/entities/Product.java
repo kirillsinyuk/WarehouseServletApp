@@ -1,5 +1,8 @@
 package app.model.entities;
 
+import app.model.entities.docs.Movement;
+import app.model.entities.docs.Receipt;
+import app.model.entities.docs.Sale;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +34,21 @@ public class Product {
     private BigDecimal sellingPrice;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id", nullable = false)
+    @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+
+    @ManyToOne
+    @JoinColumn(name = "receipt_id")
+    private Receipt receipt;
+
+    @ManyToOne
+    @JoinColumn(name = "sale_id")
+    private Sale sale;
+
+    @ManyToOne
+    @JoinColumn(name = "movement_id")
+    private Movement movement;
+
+    @Column
+    private boolean deleted;
 }

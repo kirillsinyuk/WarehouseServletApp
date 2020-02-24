@@ -10,6 +10,7 @@ import sun.security.validator.ValidatorException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -32,10 +33,7 @@ public class JsonConverter {
     }
 
     public String convertRemainsMapToDto(Map<RemainsDto, Long> remainsDtos) {
-        JsonArray jarray = gson.toJsonTree(remainsDtos).getAsJsonArray();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("products", jarray);
-
+        JsonObject jsonObject = gson.toJsonTree(remainsDtos).getAsJsonObject();
         return jsonObject.toString();
     }
 
@@ -50,13 +48,39 @@ public class JsonConverter {
             if (!ValidateUtil.isProductValid(productEntity, allFieldsRequired) || !ValidateUtil.isWarehiuseIdValid(productEntity.getWarehouse().getId())){
                 throw new ValidatorException("entity is not valid");
             }
+            productEntity.setId(null);
             return productEntity;
         } catch (JsonSyntaxException | ValidatorException e) {
            return null;
         }
     }
 
+    public Product updateProductFromJson(String json, boolean allFieldsRequired) {
+        try {
+            Product productEntity = gson.fromJson(json, Product.class);
+            if (!ValidateUtil.isProductValid(productEntity, allFieldsRequired) || !ValidateUtil.isWarehiuseIdValid(productEntity.getWarehouse().getId())){
+                throw new ValidatorException("entity is not valid");
+            }
+            return productEntity;
+        } catch (JsonSyntaxException | ValidatorException e) {
+            return null;
+        }
+    }
+
     public Warehouse parseWarehouseFromJson(String json, boolean allFieldsRequired) {
+        try {
+            Warehouse warehouseEntity = gson.fromJson(json, Warehouse.class);
+            if (!ValidateUtil.isWarehouseValid(warehouseEntity, allFieldsRequired) ){
+                throw new ValidatorException("entity is not valid");
+            }
+            warehouseEntity.setId(null);
+            return warehouseEntity;
+        } catch (JsonSyntaxException | ValidatorException e) {
+            return null;
+        }
+    }
+
+    public Warehouse updateWarehouseFromJson(String json, boolean allFieldsRequired) {
         try {
             Warehouse warehouseEntity = gson.fromJson(json, Warehouse.class);
             if (!ValidateUtil.isWarehouseValid(warehouseEntity, allFieldsRequired) || !ValidateUtil.isWarehiuseIdValid(warehouseEntity.getId())){
@@ -70,11 +94,17 @@ public class JsonConverter {
 
     public Long parseId(String json){
         Properties data = gson.fromJson(json, Properties.class);
+        if (Objects.isNull(data)){
+            return null;
+        }
         return ValidateUtil.getLongParam(data.getProperty("id"));
     }
 
     public String parseName(String json){
         Properties data = gson.fromJson(json, Properties.class);
+        if (Objects.isNull(data)){
+            return null;
+        }
         return data.getProperty("name");
     }
 

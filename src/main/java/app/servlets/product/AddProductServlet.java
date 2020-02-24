@@ -22,6 +22,7 @@ public class AddProductServlet extends HttpServlet {
         Product product = converter.parseProductFromJson(strProduct, true);
         if (product == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            return;
         }
         FactoryDao.getInstance().getProductDAO().addProduct(product);
         resp.setStatus(HttpServletResponse.SC_OK);

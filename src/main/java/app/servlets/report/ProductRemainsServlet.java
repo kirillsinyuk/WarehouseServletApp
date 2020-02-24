@@ -5,6 +5,7 @@ import app.model.entities.dto.RemainsDto;
 import app.service.FactoryDao;
 import app.service.converter.JsonConverter;
 import app.service.converter.ProductToDtoConverter;
+import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
 
-@WebServlet(name = "AddProductServlet", urlPatterns = "/product/remains")
+@WebServlet(name = "RemainsProductServlet", urlPatterns = "/product/remains")
 public class ProductRemainsServlet extends HttpServlet {
 
     @Override
@@ -27,7 +28,7 @@ public class ProductRemainsServlet extends HttpServlet {
         JsonConverter converter = new JsonConverter();
         Long id = converter.parseId(json);
         List<Product> products;
-        if (id == null) {
+        if (!ValidateUtil.isWarehiuseIdValid(id)) {
             products = FactoryDao.getInstance().getProductDAO().getAllProducts();
         } else {
             products = FactoryDao.getInstance().getProductDAO().getProductsByWarehouse(id);

@@ -18,7 +18,10 @@
         <!-- Set the current session context -->
         <property name="current_session_context_class">thread</property>
 
-        <mapping class="app.entities.Product"/>
-        <mapping class="app.entities.Warehouse"/>
+        <mapping class="app.model.entities.Product"/>
+        <mapping class="app.model.entities.Warehouse"/>
+        <mapping class="app.model.entities.docs.Receipt"/>
+        <mapping class="app.model.entities.docs.Movement"/>
+        <mapping class="app.model.entities.docs.Sale"/>
     </session-factory>
 </hibernate-configuration>

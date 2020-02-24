@@ -23,6 +23,7 @@ public class AddWarehouseServlet extends HttpServlet {
         Warehouse warehouse = converter.parseWarehouseFromJson(strWarehouse, true);
         if (warehouse == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            return;
         }
         FactoryDao.getInstance().getWarehouseDAO().addWarehouse(warehouse);
         resp.setStatus(HttpServletResponse.SC_OK);

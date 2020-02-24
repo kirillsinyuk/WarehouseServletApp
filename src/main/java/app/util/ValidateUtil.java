@@ -38,7 +38,8 @@ public class ValidateUtil {
     }
 
     public static boolean isProductValid(Product product, boolean required){
-        return stringValid(product.getName(), required)
+        return Objects.nonNull(product)
+                && stringValid(product.getName(), required)
                 && stringValid(product.getVendorCode(), required)
                 && priceIsValid(product.getPurchasePrice(), required)
                 && priceIsValid(product.getSellingPrice(), required)
@@ -46,7 +47,8 @@ public class ValidateUtil {
     }
 
     public static boolean isWarehouseValid(Warehouse warehouse, boolean required){
-        return stringValid(warehouse.getName(), required);
+        return Objects.nonNull(warehouse)
+                && stringValid(warehouse.getName(), required);
     }
 
     public static Long getLongParam(String param) {

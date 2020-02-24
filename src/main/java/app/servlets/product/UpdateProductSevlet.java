@@ -19,10 +19,11 @@ public class UpdateProductSevlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String strProduct = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonConverter converter = new JsonConverter();
-        Product product = converter.parseProductFromJson(strProduct, false);
+        Product product = converter.updateProductFromJson(strProduct, false);
 
         if (product == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            return;
         } else {
             FactoryDao.getInstance().getProductDAO().updateProduct(product);
             resp.setStatus(HttpServletResponse.SC_OK);

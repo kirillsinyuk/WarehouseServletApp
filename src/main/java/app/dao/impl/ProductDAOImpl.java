@@ -32,7 +32,7 @@ public class ProductDAOImpl implements ProductDAO {
     public Product getProductById(Long product_id) {
         Session session=HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        Query query= session.createQuery("from Product where id=:id");
+        Query query= session.createQuery("from Product where id=:id AND deleted=false");
         query.setParameter("id", product_id);
         Product product = (Product) query.uniqueResult();
         session.getTransaction().commit();
@@ -44,7 +44,7 @@ public class ProductDAOImpl implements ProductDAO {
     public List<Product> getAllProducts() {
         Session session=HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        List<Product> list = session.createQuery("from Product").list();
+        List<Product> list = session.createQuery("from Product where deleted=false").list();
         session.getTransaction().commit();
         session.close();
         return list;
@@ -55,12 +55,18 @@ public class ProductDAOImpl implements ProductDAO {
         return null;
     }
 
+    /*
+        можно и просто удалять запись из базы, но кто знает, вдруг когда-нибудь понадобится отследить перемещение или ещё что.
+        поэтому просто выставляю флаг и сохраняю.
+        в выборках эти продукты не участвуют.
+    */
     @Override
     public void deleteProduct(Long product_id) {
         Product product = getProductById(product_id);
+        product.setDeleted(true);
         Session session=HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        session.delete(product);
+        session.update(product);
         session.getTransaction().commit();
         session.close();
     }
@@ -71,8 +77,9 @@ public class ProductDAOImpl implements ProductDAO {
         session.beginTransaction();
         Query query = session.createQuery(
                 " select p "
-                        + " from Product p INNER JOIN p.warehouse_id wh"
-                        + " where wh.id = :warehouseId"
+                        + " from Product p JOIN Warehouse wh"
+                        + " ON p.warehouse.id=wh.id"
+                        + " where wh.id=:warehouseId and deleted=false"
         );
         query.setParameter("warehouseId", warehouse_id);
         List<Product> products = query.list();
@@ -86,10 +93,11 @@ public class ProductDAOImpl implements ProductDAO {
         Session session=HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         StringBuilder strQuery = new StringBuilder()
-                .append("from Product")
+                .append("from Product ")
                 .append("where ")
                 .append(param).append("=:")
-                .append(param);
+                .append(param)
+                .append(" AND deleted=false");
         Query query= session.createQuery(strQuery.toString());
         query.setParameter(param, value);
         List<Product> products = query.list();

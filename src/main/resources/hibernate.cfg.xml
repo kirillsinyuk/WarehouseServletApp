@@ -20,5 +20,8 @@
 
         <mapping class="app.model.entities.Product"/>
         <mapping class="app.model.entities.Warehouse"/>
+        <mapping class="app.model.entities.docs.Receipt"/>
+        <mapping class="app.model.entities.docs.Movement"/>
+        <mapping class="app.model.entities.docs.Sale"/>
     </session-factory>
 </hibernate-configuration>

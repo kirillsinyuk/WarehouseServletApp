@@ -2,6 +2,7 @@ package app.servlets.product;
 
 import app.service.FactoryDao;
 import app.service.converter.JsonConverter;
+import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,8 +20,9 @@ public class DeleteProductSevlet extends HttpServlet {
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JsonConverter converter = new JsonConverter();
         Long id = converter.parseId(json);
-        if (id == null) {
+        if (!ValidateUtil.isProductIdValid(id)) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            return;
         }
         FactoryDao.getInstance().getProductDAO().deleteProduct(id);
         resp.setStatus(HttpServletResponse.SC_OK);
