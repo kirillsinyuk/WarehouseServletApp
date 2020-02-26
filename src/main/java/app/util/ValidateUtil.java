@@ -3,6 +3,7 @@ package app.util;
 import app.model.entities.Product;
 import app.model.entities.Warehouse;
 import app.service.FactoryDao;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class ValidateUtil {
 
     private static boolean stringValid (String strParam, boolean required) {
         if (required) {
-            return Objects.nonNull(strParam) && !strParam.trim().isEmpty();
+            return StringUtils.isNotBlank(strParam);
         } else if (Objects.nonNull(strParam)) {
             return !strParam.trim().isEmpty();
         }
