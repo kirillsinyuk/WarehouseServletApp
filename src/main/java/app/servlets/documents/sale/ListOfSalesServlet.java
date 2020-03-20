@@ -1,7 +1,7 @@
 package app.servlets.documents.sale;
 
 import app.model.entities.docs.Sale;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonSaleConverter;
 
 import javax.servlet.ServletException;
@@ -24,9 +24,9 @@ public class ListOfSalesServlet extends HttpServlet {
         Long id = converter.parseId(json);
         List<Sale> sales;
         if (id == null) {
-            sales = FactoryDao.getInstance(FactoryDao.DaoType.SALE).getAll(Sale.class);
+            sales = DaoFactory.getSaleDAO().getAll(Sale.class);
         } else {
-            sales = Collections.singletonList((Sale) FactoryDao.getInstance(FactoryDao.DaoType.SALE).getById(Sale.class,id));
+            sales = Collections.singletonList(DaoFactory.getSaleDAO().getById(Sale.class,id));
         }
         String outputJson = converter.convertReceiptCollectionToJson(sales);
         resp.setStatus(HttpServletResponse.SC_OK);

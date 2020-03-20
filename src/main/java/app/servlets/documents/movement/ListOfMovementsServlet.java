@@ -1,7 +1,7 @@
 package app.servlets.documents.movement;
 
 import app.model.entities.docs.Movement;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonMovementConverter;
 
 import javax.servlet.ServletException;
@@ -24,9 +24,9 @@ public class ListOfMovementsServlet extends HttpServlet {
         Long id = converter.parseId(json);
         List<Movement> movements;
         if (id == null) {
-            movements = FactoryDao.getInstance(FactoryDao.DaoType.MOVEMENT).getAll(Movement.class);
+            movements = DaoFactory.getMovementDAO().getAll(Movement.class);
         } else {
-            movements = Collections.singletonList((Movement)FactoryDao.getInstance(FactoryDao.DaoType.MOVEMENT).getById(Movement.class,id));
+            movements = Collections.singletonList(DaoFactory.getMovementDAO().getById(Movement.class,id));
         }
         String outputJson = converter.convertMovementCollectionToJson(movements);
         resp.setStatus(HttpServletResponse.SC_OK);

@@ -1,9 +1,8 @@
 package app.servlets.report;
 
-import app.dao.impl.ProductDAOImpl;
 import app.model.entities.Product;
 import app.model.entities.dto.RemainsDto;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonProductConverter;
 import app.service.converter.dto.ProductToDtoConverter;
 import app.util.ValidateUtil;
@@ -30,9 +29,9 @@ public class ProductRemainsServlet extends HttpServlet {
         Long id = converter.parseId(json);
         List<Product> products;
         if (!ValidateUtil.isWarehiuseIdValid(id)) {
-            products = FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT).getAll(Product.class);
+            products = DaoFactory.getProductDAO().getAll(Product.class);
         } else {
-            products = ((ProductDAOImpl)FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT)).getProductsByWarehouse(id);
+            products = DaoFactory.getProductDAO().getProductsByWarehouse(id);
         }
         Map<RemainsDto, Long> result = products.stream().map(ProductToDtoConverter::toRemainsDto).collect(Collectors.groupingBy(identity(), Collectors.counting()));
         String outputJson = converter.convertRemainsMapToDto(result);

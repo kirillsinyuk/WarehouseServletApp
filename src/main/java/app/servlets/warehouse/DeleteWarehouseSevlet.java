@@ -1,8 +1,7 @@
 package app.servlets.warehouse;
 
-import app.dao.interfaces.CrudDAO;
 import app.model.entities.Warehouse;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonWarehouseConverter;
 import app.util.ValidateUtil;
 
@@ -26,7 +25,7 @@ public class DeleteWarehouseSevlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        ((CrudDAO)FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE)).delete(Warehouse.class, id);
+        DaoFactory.getWarehouseDAO().delete(Warehouse.class, id);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

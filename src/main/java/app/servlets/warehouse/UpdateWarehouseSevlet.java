@@ -1,8 +1,7 @@
 package app.servlets.warehouse;
 
-import app.dao.interfaces.CrudDAO;
 import app.model.entities.Warehouse;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonWarehouseConverter;
 
 import javax.servlet.ServletException;
@@ -26,7 +25,7 @@ public class UpdateWarehouseSevlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         } else {
-            ((CrudDAO)FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE)).update(warehouse);
+            DaoFactory.getWarehouseDAO().update(warehouse);
             resp.setStatus(HttpServletResponse.SC_OK);
         }
     }

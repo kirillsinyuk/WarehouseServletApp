@@ -1,7 +1,7 @@
 package app.servlets.documents.movement;
 
 import app.model.entities.docs.Movement;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonMovementConverter;
 
 import javax.servlet.ServletException;
@@ -24,7 +24,7 @@ public class AddMovementServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        FactoryDao.getInstance(FactoryDao.DaoType.MOVEMENT).add(move);
+        DaoFactory.getMovementDAO().add(move);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

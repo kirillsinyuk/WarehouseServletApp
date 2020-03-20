@@ -1,7 +1,7 @@
 package app.servlets.warehouse;
 
 import app.model.entities.Warehouse;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonWarehouseConverter;
 import app.util.ValidateUtil;
 
@@ -25,7 +25,7 @@ public class GetWarehouseServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        Warehouse warehouse = (Warehouse) FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE).getById(Warehouse.class, id);
+        Warehouse warehouse = DaoFactory.getWarehouseDAO().getById(Warehouse.class, id);
         resp.setContentType("application/json;charset=UTF-8");
         String output = converter.convertWarehouseToJson(warehouse);
 

@@ -1,7 +1,7 @@
 package app.servlets.documents.receipt;
 
 import app.model.entities.docs.Receipt;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonReceiptConverter;
 
 import javax.servlet.ServletException;
@@ -24,7 +24,7 @@ public class AddReceiptServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        FactoryDao.getInstance(FactoryDao.DaoType.RECEIPT).add(receipt);
+        DaoFactory.getReceiptDAO().add(receipt);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

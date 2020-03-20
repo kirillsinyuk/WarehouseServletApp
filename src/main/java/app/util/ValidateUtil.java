@@ -5,7 +5,7 @@ import app.model.entities.Warehouse;
 import app.model.entities.docs.Movement;
 import app.model.entities.docs.Receipt;
 import app.model.entities.docs.Sale;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -34,11 +34,11 @@ public class ValidateUtil {
     }
 
     public static boolean isWarehiuseIdValid (Long id) {
-        return Objects.nonNull(id) && FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE).getById(Warehouse.class, id) != null;
+        return Objects.nonNull(id) && DaoFactory.getInstance(DaoFactory.DaoType.WAREHOUSE).getById(Warehouse.class, id) != null;
     }
 
     public static boolean isProductIdValid (Long id) {
-        return Objects.nonNull(id) && FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT).getById(Product.class, id) != null;
+        return Objects.nonNull(id) && DaoFactory.getInstance(DaoFactory.DaoType.PRODUCT).getById(Product.class, id) != null;
     }
 
     public static boolean isProductValid(Product product, boolean required){
@@ -51,7 +51,7 @@ public class ValidateUtil {
     }
 
     public static boolean isMovementIdValid (Long id) {
-        return Objects.nonNull(id) && FactoryDao.getInstance(FactoryDao.DaoType.MOVEMENT).getById(Movement.class, id) != null;
+        return Objects.nonNull(id) && DaoFactory.getInstance(DaoFactory.DaoType.MOVEMENT).getById(Movement.class, id) != null;
     }
 
 

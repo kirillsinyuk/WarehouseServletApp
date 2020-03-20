@@ -1,7 +1,7 @@
 package app.servlets.warehouse;
 
 import app.model.entities.Warehouse;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonWarehouseConverter;
 
 import javax.servlet.ServletException;
@@ -25,7 +25,7 @@ public class AddWarehouseServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE).add(warehouse);
+        DaoFactory.getWarehouseDAO().add(warehouse);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

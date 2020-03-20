@@ -1,8 +1,7 @@
 package app.servlets.product;
 
-import app.dao.interfaces.CrudDAO;
 import app.model.entities.Product;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonProductConverter;
 
 import javax.servlet.ServletException;
@@ -26,7 +25,7 @@ public class UpdateProductSevlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         } else {
-            ((CrudDAO)FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT)).update(product);
+            DaoFactory.getProductDAO().update(product);
             resp.setStatus(HttpServletResponse.SC_OK);
         }
     }

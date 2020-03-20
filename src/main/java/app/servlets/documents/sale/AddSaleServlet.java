@@ -1,7 +1,7 @@
 package app.servlets.documents.sale;
 
 import app.model.entities.docs.Sale;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonSaleConverter;
 
 import javax.servlet.ServletException;
@@ -24,7 +24,7 @@ public class AddSaleServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        FactoryDao.getInstance(FactoryDao.DaoType.SALE).add(sale);
+        DaoFactory.getSaleDAO().add(sale);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

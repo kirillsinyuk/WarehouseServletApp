@@ -1,7 +1,7 @@
 package app.servlets.product;
 
 import app.model.entities.Product;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonProductConverter;
 import app.util.ValidateUtil;
 
@@ -25,7 +25,7 @@ public class GetProductServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        Product product = (Product)FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT).getById(Product.class, id);
+        Product product = DaoFactory.getProductDAO().getById(Product.class, id);
         resp.setContentType("application/json;charset=UTF-8");
         String output = converter.convertProductToJson(product);
 

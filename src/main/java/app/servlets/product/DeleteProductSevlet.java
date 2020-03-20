@@ -1,8 +1,7 @@
 package app.servlets.product;
 
-import app.dao.interfaces.CrudDAO;
 import app.model.entities.Product;
-import app.service.FactoryDao;
+import app.service.DaoFactory;
 import app.service.converter.json.JsonProductConverter;
 import app.util.ValidateUtil;
 
@@ -26,7 +25,7 @@ public class DeleteProductSevlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        ((CrudDAO)FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT)).delete(Product.class, id);
+        DaoFactory.getProductDAO().delete(Product.class, id);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }
