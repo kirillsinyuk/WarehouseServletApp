@@ -1,4 +1,4 @@
-package app.service.converter;
+package app.service.converter.dto;
 
 import app.model.entities.Product;
 import app.model.entities.dto.ProductDto;

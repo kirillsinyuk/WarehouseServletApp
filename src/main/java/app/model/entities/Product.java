@@ -22,16 +22,16 @@ public class Product {
     private Long id;
 
     @Column
-    private String vendorCode;
+    private String vendorCode; //артикул
 
     @Column
-    private String name;
+    private String name; //наименование
 
     @Column
-    private BigDecimal purchasePrice;
+    private BigDecimal purchasePrice; //цена закупки
 
     @Column
-    private BigDecimal sellingPrice;
+    private BigDecimal sellingPrice; // цена продажи
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
@@ -49,6 +49,4 @@ public class Product {
     @JoinColumn(name = "movement_id")
     private Movement movement;
 
-    @Column
-    private boolean deleted;
 }

@@ -1,8 +1,8 @@
 package app.servlets.documents.sale;
 
-import app.model.entities.Product;
+import app.model.entities.docs.Sale;
 import app.service.FactoryDao;
-import app.service.converter.JsonConverter;
+import app.service.converter.json.JsonSaleConverter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,13 +18,13 @@ public class AddSaleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String strProduct = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JsonConverter converter = new JsonConverter();
-        Product product = converter.parseProductFromJson(strProduct, true);
-        if (product == null){
+        JsonSaleConverter converter = new JsonSaleConverter();
+        Sale sale = converter.parseSaleFromJson(strProduct);
+        if (sale == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        FactoryDao.getInstance().getProductDAO().addProduct(product);
+        FactoryDao.getInstance(FactoryDao.DaoType.SALE).add(sale);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

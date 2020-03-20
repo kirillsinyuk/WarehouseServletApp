@@ -1,35 +1,43 @@
 package app.service;
 
+import app.dao.impl.MovementDAOImpl;
 import app.dao.impl.ProductDAOImpl;
+import app.dao.impl.ReceiptDAOImpl;
+import app.dao.impl.SaleDAOImpl;
 import app.dao.impl.WarehouseDAOImpl;
-import app.dao.interfaces.ProductDAO;
-import app.dao.interfaces.WarehouseDAO;
+import app.dao.interfaces.CommonDAO;
 
 public class FactoryDao {
 
-    private static ProductDAO productDAO = null;
-    private static WarehouseDAO warehouseDAO = null;
+    private static final ProductDAOImpl productDAO = new ProductDAOImpl();
+    private static final WarehouseDAOImpl warehouseDAO = new WarehouseDAOImpl();
+    private static final MovementDAOImpl movementDAO = new MovementDAOImpl();
+    private static final ReceiptDAOImpl receiptDAO = new ReceiptDAOImpl();
+    private static final SaleDAOImpl saleDAO = new SaleDAOImpl();
 
-    private static FactoryDao instance = null;
-
-    public static synchronized FactoryDao getInstance() {
-        if (instance == null) {
-            instance = new FactoryDao();
-        }
-        return instance;
+    public enum DaoType {
+        PRODUCT,
+        WAREHOUSE,
+        MOVEMENT,
+        RECEIPT,
+        SALE
     }
 
-    public ProductDAO getProductDAO() {
-        if (productDAO == null) {
-            productDAO = new ProductDAOImpl();
+    public static CommonDAO getInstance(DaoType type) {
+        switch (type){
+            case PRODUCT:
+                return productDAO;
+            case MOVEMENT:
+                return movementDAO;
+            case WAREHOUSE:
+                return warehouseDAO;
+            case RECEIPT:
+                return receiptDAO;
+            case SALE:
+                return saleDAO;
+            default:
+                return null;
         }
-        return productDAO;
-    }
 
-    public WarehouseDAO getWarehouseDAO() {
-        if (warehouseDAO == null) {
-            warehouseDAO = new WarehouseDAOImpl();
-        }
-        return warehouseDAO;
     }
 }

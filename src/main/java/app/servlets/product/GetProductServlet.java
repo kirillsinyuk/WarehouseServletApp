@@ -2,7 +2,7 @@ package app.servlets.product;
 
 import app.model.entities.Product;
 import app.service.FactoryDao;
-import app.service.converter.*;
+import app.service.converter.json.JsonProductConverter;
 import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class GetProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonConverter converter = new JsonConverter();
+        JsonProductConverter converter = new JsonProductConverter();
 
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         Long id = converter.parseId(json);
@@ -25,7 +25,7 @@ public class GetProductServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        Product product = FactoryDao.getInstance().getProductDAO().getProductById(id);
+        Product product = (Product)FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT).getById(Product.class, id);
         resp.setContentType("application/json;charset=UTF-8");
         String output = converter.convertProductToJson(product);
 

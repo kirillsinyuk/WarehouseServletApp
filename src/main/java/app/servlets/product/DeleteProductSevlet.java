@@ -1,7 +1,9 @@
 package app.servlets.product;
 
+import app.dao.interfaces.CrudDAO;
+import app.model.entities.Product;
 import app.service.FactoryDao;
-import app.service.converter.JsonConverter;
+import app.service.converter.json.JsonProductConverter;
 import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
@@ -18,13 +20,13 @@ public class DeleteProductSevlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JsonConverter converter = new JsonConverter();
+        JsonProductConverter converter = new JsonProductConverter();
         Long id = converter.parseId(json);
         if (!ValidateUtil.isProductIdValid(id)) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        FactoryDao.getInstance().getProductDAO().deleteProduct(id);
+        ((CrudDAO)FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT)).delete(Product.class, id);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

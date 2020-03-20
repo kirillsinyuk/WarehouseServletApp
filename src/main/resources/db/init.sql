@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS Movement
 CREATE TABLE IF NOT EXISTS Product
 (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
-    vendorCode varchar(255),
+    vendorCode varchar(255) UNIQUE,
     name varchar(255),
     purchasePrice BIGINT(20),
     sellingPrice BIGINT(20),
@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS Product
     receipt_id BIGINT(20),
     sale_id BIGINT(20),
     movement_id BIGINT(20),
-    deleted BIT(1) DEFAULT FALSE,
 
     PRIMARY KEY (id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouse (id),

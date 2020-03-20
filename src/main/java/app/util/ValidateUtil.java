@@ -2,6 +2,9 @@ package app.util;
 
 import app.model.entities.Product;
 import app.model.entities.Warehouse;
+import app.model.entities.docs.Movement;
+import app.model.entities.docs.Receipt;
+import app.model.entities.docs.Sale;
 import app.service.FactoryDao;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -31,11 +34,11 @@ public class ValidateUtil {
     }
 
     public static boolean isWarehiuseIdValid (Long id) {
-        return Objects.nonNull(id) && FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(id) != null;
+        return Objects.nonNull(id) && FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE).getById(Warehouse.class, id) != null;
     }
 
     public static boolean isProductIdValid (Long id) {
-        return Objects.nonNull(id) && FactoryDao.getInstance().getProductDAO().getProductById(id) != null;
+        return Objects.nonNull(id) && FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT).getById(Product.class, id) != null;
     }
 
     public static boolean isProductValid(Product product, boolean required){
@@ -45,6 +48,30 @@ public class ValidateUtil {
                 && priceIsValid(product.getPurchasePrice(), required)
                 && priceIsValid(product.getSellingPrice(), required)
                 && isWarehouseValid(product.getWarehouse(), required);
+    }
+
+    public static boolean isMovementIdValid (Long id) {
+        return Objects.nonNull(id) && FactoryDao.getInstance(FactoryDao.DaoType.MOVEMENT).getById(Movement.class, id) != null;
+    }
+
+
+    public static boolean isMovementValid(Movement move){
+        return Objects.nonNull(move)
+                && isWarehouseValid(move.getWarehouseFrom(), true)
+                && isWarehouseValid(move.getWarehouseTo(), true)
+                && move.getProducts().stream().allMatch(pr -> isProductValid(pr, true) && isProductIdValid(pr.getId()));
+    }
+
+    public static boolean isReceiptValid(Receipt receipt){
+        return Objects.nonNull(receipt)
+                && isWarehouseValid(receipt.getWarehouse(), true)
+                && receipt.getProduct().stream().allMatch(pr -> isProductValid(pr, true) && isProductIdValid(pr.getId()));
+    }
+
+    public static boolean isSaleValid(Sale sale){
+        return Objects.nonNull(sale)
+                && isWarehouseValid(sale.getWarehouse(), true)
+                && sale.getProducts().stream().allMatch(pr -> isProductValid(pr, true) && isProductIdValid(pr.getId()));
     }
 
     public static boolean isWarehouseValid(Warehouse warehouse, boolean required){

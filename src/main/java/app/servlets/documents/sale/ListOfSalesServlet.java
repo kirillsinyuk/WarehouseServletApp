@@ -1,8 +1,8 @@
 package app.servlets.documents.sale;
 
-import app.model.entities.Product;
+import app.model.entities.docs.Sale;
 import app.service.FactoryDao;
-import app.service.converter.JsonConverter;
+import app.service.converter.json.JsonSaleConverter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,15 +20,15 @@ public class ListOfSalesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JsonConverter converter = new JsonConverter();
-        String name = converter.parseName(json);
-        List<Product> products;
-        if (name == null) {
-            products = FactoryDao.getInstance().getProductDAO().getAllProducts();
+        JsonSaleConverter converter = new JsonSaleConverter();
+        Long id = converter.parseId(json);
+        List<Sale> sales;
+        if (id == null) {
+            sales = FactoryDao.getInstance(FactoryDao.DaoType.SALE).getAll(Sale.class);
         } else {
-            products = FactoryDao.getInstance().getProductDAO().getProductsByParam("name", name);
+            sales = Collections.singletonList((Sale) FactoryDao.getInstance(FactoryDao.DaoType.SALE).getById(Sale.class,id));
         }
-        String outputJson = converter.convertProductCollectionToJson(products);
+        String outputJson = converter.convertReceiptCollectionToJson(sales);
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.getWriter().write(outputJson);
     }

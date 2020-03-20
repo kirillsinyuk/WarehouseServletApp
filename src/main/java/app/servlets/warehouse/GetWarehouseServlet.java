@@ -2,7 +2,7 @@ package app.servlets.warehouse;
 
 import app.model.entities.Warehouse;
 import app.service.FactoryDao;
-import app.service.converter.*;
+import app.service.converter.json.JsonWarehouseConverter;
 import app.util.ValidateUtil;
 
 import javax.servlet.ServletException;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class GetWarehouseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonConverter converter = new JsonConverter();
+        JsonWarehouseConverter converter = new JsonWarehouseConverter();
 
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         Long id = converter.parseId(json);
@@ -25,7 +25,7 @@ public class GetWarehouseServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        Warehouse warehouse = FactoryDao.getInstance().getWarehouseDAO().getWarehouseById(id);
+        Warehouse warehouse = (Warehouse) FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE).getById(Warehouse.class, id);
         resp.setContentType("application/json;charset=UTF-8");
         String output = converter.convertWarehouseToJson(warehouse);
 

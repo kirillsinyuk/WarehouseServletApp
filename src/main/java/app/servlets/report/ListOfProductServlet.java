@@ -1,8 +1,9 @@
 package app.servlets.report;
 
+import app.dao.impl.ProductDAOImpl;
 import app.model.entities.Product;
 import app.service.FactoryDao;
-import app.service.converter.JsonConverter;
+import app.service.converter.json.JsonProductConverter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,13 +20,13 @@ public class ListOfProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String json = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JsonConverter converter = new JsonConverter();
+        JsonProductConverter converter = new JsonProductConverter();
         String name = converter.parseName(json);
         List<Product> products;
         if (name == null) {
-            products = FactoryDao.getInstance().getProductDAO().getAllProducts();
+            products = FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT).getAll(Product.class);
         } else {
-            products = FactoryDao.getInstance().getProductDAO().getProductsByParam("name", name);
+            products = ((ProductDAOImpl)FactoryDao.getInstance(FactoryDao.DaoType.PRODUCT)).getProductsByParam("name", name);
         }
         String outputJson = converter.convertProductCollectionToJson(products);
         resp.setStatus(HttpServletResponse.SC_OK);

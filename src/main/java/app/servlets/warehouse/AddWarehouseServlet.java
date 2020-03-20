@@ -2,7 +2,7 @@ package app.servlets.warehouse;
 
 import app.model.entities.Warehouse;
 import app.service.FactoryDao;
-import app.service.converter.JsonConverter;
+import app.service.converter.json.JsonWarehouseConverter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,13 +19,13 @@ public class AddWarehouseServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String strWarehouse = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JsonConverter converter = new JsonConverter();
+        JsonWarehouseConverter converter = new JsonWarehouseConverter();
         Warehouse warehouse = converter.parseWarehouseFromJson(strWarehouse, true);
         if (warehouse == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             return;
         }
-        FactoryDao.getInstance().getWarehouseDAO().addWarehouse(warehouse);
+        FactoryDao.getInstance(FactoryDao.DaoType.WAREHOUSE).add(warehouse);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }
